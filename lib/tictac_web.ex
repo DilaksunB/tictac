@@ -16,6 +16,7 @@ defmodule TictacWeb do
   below. Instead, define any helper function in modules
   and import those modules here.
   """
+  def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
 
   def controller do
     quote do
@@ -82,7 +83,7 @@ defmodule TictacWeb do
       use Phoenix.HTML
 
       # Import LiveView helpers (live_render, live_component, live_patch, etc)
-      import Phoenix.LiveView.Helpers
+      import Phoenix.Component
       # Import helpers for game components
       import TictacWeb.LiveView.Components
 
@@ -92,6 +93,16 @@ defmodule TictacWeb do
       import TictacWeb.ErrorHelpers
       import TictacWeb.Gettext
       alias TictacWeb.Router.Helpers, as: Routes
+      unquote(verified_routes())
+    end
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: TictacWeb.Endpoint,
+        router: TictacWeb.Router,
+        statics: TictacWeb.static_paths()
     end
   end
 

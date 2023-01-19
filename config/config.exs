@@ -15,6 +15,27 @@ config :tictac, TictacWeb.Endpoint,
   pubsub_server: Tictac.PubSub,
   live_view: [signing_salt: "wxN4jnnC"]
 
+# Configure esbuild (the version is required)
+config :esbuild,
+version: "0.14.41",
+default: [
+  args:
+    ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+  cd: Path.expand("../assets", __DIR__),
+  env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+]
+
+config :tailwind,
+  version: "3.1.8",
+  default: [
+    args: ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=../priv/static/assets/app.css
+    ),
+    cd: Path.expand("../assets", __DIR__)
+  ]
+
 # Track which mix environment this is for since Mix isn't available in
 # production releases.
 config :tictac, :env, Mix.env()

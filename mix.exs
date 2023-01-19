@@ -7,7 +7,6 @@ defmodule Tictac.MixProject do
       version: "0.1.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -33,21 +32,24 @@ defmodule Tictac.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.5.7"},
-      {:phoenix_live_view, "~> 0.15.0"},
+      {:phoenix, "~> 1.7.0-rc.0", override: true},
+      {:phoenix_live_view, "~> 0.18.7"},
       {:floki, ">= 0.27.0", only: :test},
-      {:phoenix_html, "~> 2.11"},
+      {:phoenix_html, "~> 3.2"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_dashboard, "~> 0.4"},
-      {:telemetry_metrics, "~> 0.4"},
-      {:telemetry_poller, "~> 0.4"},
+      {:phoenix_live_dashboard, "~> 0.7.2"},
+      {:telemetry_metrics, "~> 0.6.1"},
+      {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
+      {:phoenix_view, "~> 2.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:ecto, "~> 3.5.8"},
-      {:phoenix_ecto, "~> 4.2.1"},
-      {:horde, "~> 0.8.3"},
-      {:libcluster, "~> 3.2.2"}
+      {:ecto, "~> 3.9"},
+      {:phoenix_ecto, "~> 4.4"},
+      {:horde, "~> 0.8.7"},
+      {:libcluster, "~> 3.2.2"},
+      {:esbuild, "~> 0.6.0", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev}
     ]
   end
 
@@ -59,7 +61,8 @@ defmodule Tictac.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "cmd npm install --prefix assets"]
+      setup: ["deps.get", "cmd npm install --prefix assets"],
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
     ]
   end
 end
